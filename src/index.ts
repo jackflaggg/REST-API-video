@@ -8,14 +8,14 @@ export const HTTP_STATUSES = {
     CREATED_201: 201,
     NO_CONTENT_204: 204,
 
-    BAD_REQUEST400: 400,
-    NOT_FOUND: 404,
+    BAD_REQUEST_400: 400,
+    NOT_FOUND_404: 404,
 };
 
 const jsonBodyMiddleware = express.json();
 app.use(jsonBodyMiddleware);
 
-const db = {
+export const db = {
     courses: [
         {id: 1, title: 'front-en'},
         {id: 2, title: 'back-end'},
@@ -39,7 +39,7 @@ app.get('/courses/:id', (req, res) => {
         .find(cours => cours.id === +req.params.id);
 
     if (!foundCourse) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND);
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
         return;
     }
 
@@ -49,7 +49,7 @@ app.get('/courses/:id', (req, res) => {
 app.post('/courses', (req, res) => {
 
     if (!req.body.title){
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST400);
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
         return;
     }
 
@@ -72,7 +72,7 @@ app.delete('/courses/:id', (req, res) => {
 
     if (courseIndex === -1) {
         // Если объект не существует, отправляем статус 404 Not Found
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND);
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
     } else {
         // Если объект существует, выполняем его удаление
         db.courses = db.courses.filter(course => course.id !== courseId);
@@ -83,7 +83,7 @@ app.delete('/courses/:id', (req, res) => {
 app.put('/courses/:id', (req, res) => {
 
     if(!req.body.title){
-        res.sendStatus(HTTP_STATUSES.BAD_REQUEST400);
+        res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
         return;
     }
 
@@ -91,7 +91,7 @@ app.put('/courses/:id', (req, res) => {
         .find(cours => cours.id === +req.params.id);
 
     if (!foundCourse) {
-        res.sendStatus(HTTP_STATUSES.NOT_FOUND);
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404);
         return;
     }
 

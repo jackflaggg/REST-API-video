@@ -1,4 +1,5 @@
-import express from 'express'
+import express, {Request, Response} from 'express'
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "./types";
 
 export const app = express();
 const port = 3000;
@@ -15,7 +16,12 @@ export const HTTP_STATUSES = {
 const jsonBodyMiddleware = express.json();
 app.use(jsonBodyMiddleware);
 
-export const db = {
+type CourseType = {
+    id: number,
+    title: string
+}
+
+export const db: { courses: CourseType[]} = {
     courses: [
         {id: 1, title: 'front-en'},
         {id: 2, title: 'back-end'},
@@ -23,18 +29,21 @@ export const db = {
         {id: 4, title: 'devops'}]
 };
 
-app.get('/courses', (req, res) => {
+app.get('/courses', (req: RequestWithQuery<{ title: string }>,
+                     res: Response<CourseType[]>) => {
     let foundCourses = db.courses;
+
 
     if (req.query.title){
         foundCourses = foundCourses
-            .filter(cours => cours.title.indexOf(req.query.title as string) > -1);
+            .filter(cours => cours.title.indexOf(req.query.title) > -1);
     }
 
     res.json(foundCourses);
 });
 
-app.get('/courses/:id', (req, res) => {
+app.get('/courses/:id', (req: RequestWithParams<{id: string}>,
+                         res: Response) => {
     const foundCourse = db.courses
         .find(cours => cours.id === +req.params.id);
 
@@ -46,7 +55,8 @@ app.get('/courses/:id', (req, res) => {
     res.json(foundCourse);
 })
 
-app.post('/courses', (req, res) => {
+app.post('/courses', (req: RequestWithBody<{title: string}>,
+                                    res: Response<CourseType>) => {
 
     if (!req.body.title){
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
@@ -66,7 +76,8 @@ app.post('/courses', (req, res) => {
         .json(cratedCourse);
 });
 
-app.delete('/courses/:id', (req, res) => {
+app.delete('/courses/:id', (req: RequestWithParams<{id: string}>,
+                                          res) => {
     const courseId = +req.params.id;
     const courseIndex = db.courses.findIndex(course => course.id === courseId);
 
@@ -80,7 +91,8 @@ app.delete('/courses/:id', (req, res) => {
     }
 });
 
-app.put('/courses/:id', (req, res) => {
+app.put('/courses/:id', (req: RequestWithParamsAndBody<{id: string}, {title: string}>,
+                                        res) => {
 
     if(!req.body.title){
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
@@ -100,7 +112,8 @@ app.put('/courses/:id', (req, res) => {
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 });
 
-app.delete('/__test__/data', (req, res) => {
+app.delete('/__test__/data', (req,
+                                            res) => {
     db.courses = [];
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 });

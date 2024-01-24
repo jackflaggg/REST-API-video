@@ -70,7 +70,7 @@ describe('/course', () => {
             .expect(HTTP_STATUSES.OK_200, [createdCourse1, createdCourse2])
     })
 
-    it(`+PUT should'nt update course with incorrect input data`, async () => {
+    it(`-PUT should'nt update course with incorrect input data`, async () => {
         await request(app)
             .put( '/courses/' + createdCourse1.id)
             .send({title: ''})
@@ -107,7 +107,7 @@ describe('/course', () => {
             )
     })
 
-    it('DELETE both courses', async() => {
+    it('+DELETE both courses', async() => {
         await request(app)
             .delete('/courses/' + createdCourse1.id)
             .expect(HTTP_STATUSES.NO_CONTENT_204)

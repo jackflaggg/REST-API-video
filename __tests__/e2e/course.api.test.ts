@@ -57,16 +57,18 @@ describe('/course', () => {
 
     let createdCourse2: any = null;
     it(`+POST create course with correct input data`, async () => {
+        const newVar: CreateCourseModel = { title: 'new course 2' };
+
         const createResponse = await request(app)
             .post('/courses')
-            .send({ title: 'new course 2' })
+            .send(newVar)
             .expect(HTTP_STATUSES.CREATED_201)
 
         createdCourse2 = createResponse.body;
 
         expect(createdCourse2).toEqual({
             id: expect.any(Number),
-            title: 'new course 2'
+            title: newVar.title
         })
 
         await request(app)
@@ -75,9 +77,11 @@ describe('/course', () => {
     })
 
     it(`-PUT should'nt update course with incorrect input data`, async () => {
+        const newVar: CreateCourseModel = { title: '' };
+
         await request(app)
             .put( '/courses/' + createdCourse1.id)
-            .send({title: ''})
+            .send(newVar)
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         await request(app)
@@ -86,23 +90,27 @@ describe('/course', () => {
     })
 
     it(`+PUT should update course that not exist with`, async () => {
+        const newVar: CreateCourseModel = { title: 'good title' };
+
         await request(app)
             .put( '/courses/' + -100)
-            .send({title: 'good title'})
+            .send(newVar)
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     })
 
     it(`+PUT should update course with correct input data`, async () => {
+        const newVar: CreateCourseModel = { title: 'good title' };
+
         await request(app)
             .put( '/courses/' + createdCourse1.id)
-            .send({title: 'good new title'})
+            .send(newVar)
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
         await request(app)
             .get( '/courses/' + createdCourse1.id)
             .expect(HTTP_STATUSES.OK_200, {
                 ...createdCourse1,
-                title: 'good new title'
+                title: newVar.title
             })
 
         await request(app)

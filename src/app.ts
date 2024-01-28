@@ -13,5 +13,5 @@ app.use(jsonBodyMiddleware);
 
 app.use("/courses", getCoursesRouter(db))
 app.use("/__test__", getTestsRouter(db))
-app.use("/interesting", getInterestingRouter(db))
+app.use("/interestiny", getInterestingRouter(db))
 

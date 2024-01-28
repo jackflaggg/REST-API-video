@@ -23,7 +23,7 @@ describe('/course', () => {
     })
 
     it(`-POST should'nt create course with incorrect input data`, async () => {
-        const newVar: CreateCourseModel = { title: 'new course' };
+        const newVar: CreateCourseModel = { title: '' };
 
         await request(app)
             .post('/courses')

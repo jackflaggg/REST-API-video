@@ -5,9 +5,26 @@ import {CourseAPIModel} from "../models/CourseAPIModel";
 import {URIParamsCourseIdModel} from "../models/URIParamsCourseIdModel";
 import {CreateCourseModel} from "../models/CreateCourseModel";
 import {UpdateCourseModel} from "../models/UpdateCourseModel";
-import {app, CourseType, db, getCourseViewModel, HTTP_STATUSES} from "../app";
+import {CourseType, DBType} from "../db/db";
 
-export const addCoursesRoutes = (app: Express) => {
+
+export const HTTP_STATUSES = {
+    OK_200: 200,
+    CREATED_201: 201,
+    NO_CONTENT_204: 204,
+
+    BAD_REQUEST_400: 400,
+    NOT_FOUND_404: 404,
+};
+
+export function getCourseViewModel(dbCourse: CourseType): CourseAPIModel {
+    return {
+        id: dbCourse.id,
+        title: dbCourse.title,
+    }
+}
+
+export const addCoursesRoutes = (app: Express, db: DBType) => {
     app.get('/courses', (req: RequestWithQuery<QueryCoursesModel>,
                          res: Response<CourseAPIModel[]>) => {
         let foundCourses = db.courses;

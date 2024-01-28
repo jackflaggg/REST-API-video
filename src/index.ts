@@ -36,6 +36,13 @@ export const db: { courses: CourseType[]} = {
         {id: 4, title: 'devops', studentsCount: 10}]
 };
 
+function getCourseViewModel(dbCourse: CourseType) : CourseAPIModel {
+    return {
+        id: dbCourse.id,
+        title: dbCourse.title,
+    }
+}
+
 app.get('/courses', (req: RequestWithQuery<QueryCoursesModel>,
                      res: Response<CourseAPIModel[]>) => {
     let foundCourses = db.courses;
@@ -46,12 +53,7 @@ app.get('/courses', (req: RequestWithQuery<QueryCoursesModel>,
             .filter(cours => cours.title.indexOf(req.query.title) > -1);
     }
 
-    res.json(foundCourses.map(dbCourse => {
-        return {
-            id: dbCourse.id,
-            title: dbCourse.title,
-        }
-    }))
+    res.json(foundCourses.map(getCourseViewModel))
 });
 
 app.get('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModel>,
@@ -64,10 +66,7 @@ app.get('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModel>,
         return;
     }
 
-    res.json( {
-        id: foundCourse.id,
-        title: foundCourse.title
-    });
+    res.json(getCourseViewModel(foundCourse));
 })
 
 app.post('/courses', (req: RequestWithBody<CreateCourseModel>,
@@ -88,10 +87,7 @@ app.post('/courses', (req: RequestWithBody<CreateCourseModel>,
 
     res
         .status(HTTP_STATUSES.CREATED_201)
-        .json({
-            id: cratedCourse.id,
-            title: cratedCourse.title
-        });
+        .json(getCourseViewModel(cratedCourse));
 });
 
 app.delete('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModel>,

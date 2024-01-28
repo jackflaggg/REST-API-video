@@ -1,5 +1,6 @@
 import request from 'supertest'
 import {app, db, HTTP_STATUSES} from "../../src";
+import {CreateCourseModel} from "../../src/models/CreateCourseModel";
 
 describe('/course', () => {
 
@@ -34,9 +35,10 @@ describe('/course', () => {
 
     let createdCourse1: any = null;
    it(`+POST should create course with correct input data`, async () => {
-     const createResponse = await request(app)
+       const newVar: CreateCourseModel = { title: 'new course' };
+       const createResponse = await request(app)
          .post('/courses')
-         .send({ title: 'new course' })
+         .send(newVar)
          .expect(HTTP_STATUSES.CREATED_201)
 
        createdCourse1 = createResponse.body;

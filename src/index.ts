@@ -2,6 +2,10 @@ import express, {Request, Response} from 'express'
 import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "./types";
 import {CreateCourseModel} from "./models/CreateCourseModel";
 import {QueryCoursesModel} from "./models/QueryCoursesModel";
+import {CourseAPIModel} from "./models/CourseAPIModel";
+import {URIParamsCourseIdModel} from "./models/URIParamsCourseIdModel";
+import {UpdateCourseModel} from "./models/UpdateCourseModel";
+
 
 export const app = express();
 const port = 3000;
@@ -20,19 +24,20 @@ app.use(jsonBodyMiddleware);
 
 type CourseType = {
     id: number,
-    title: string
+    title: string,
+    studentsCount: number
 }
 
 export const db: { courses: CourseType[]} = {
     courses: [
-        {id: 1, title: 'front-en'},
-        {id: 2, title: 'back-end'},
-        {id: 3, title: 'qa'},
-        {id: 4, title: 'devops'}]
+        {id: 1, title: 'front-en', studentsCount: 10},
+        {id: 2, title: 'back-end', studentsCount: 10},
+        {id: 3, title: 'qa', studentsCount: 10},
+        {id: 4, title: 'devops', studentsCount: 10}]
 };
 
 app.get('/courses', (req: RequestWithQuery<QueryCoursesModel>,
-                     res: Response<CourseType[]>) => {
+                     res: Response<CourseAPIModel[]>) => {
     let foundCourses = db.courses;
 
 
@@ -41,11 +46,16 @@ app.get('/courses', (req: RequestWithQuery<QueryCoursesModel>,
             .filter(cours => cours.title.indexOf(req.query.title) > -1);
     }
 
-    res.json(foundCourses);
+    res.json(foundCourses.map(dbCourse => {
+        return {
+            id: dbCourse.id,
+            title: dbCourse.title,
+        }
+    }))
 });
 
-app.get('/courses/:id', (req: RequestWithParams<{id: string}>,
-                         res: Response) => {
+app.get('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModel>,
+                         res: Response<CourseAPIModel>) => {
     const foundCourse = db.courses
         .find(cours => cours.id === +req.params.id);
 
@@ -54,31 +64,34 @@ app.get('/courses/:id', (req: RequestWithParams<{id: string}>,
         return;
     }
 
-    res.json(foundCourse);
+    res.json( {
+        id: foundCourse.id,
+        title: foundCourse.title
+    });
 })
 
 app.post('/courses', (req: RequestWithBody<CreateCourseModel>,
-                                    res: Response<CourseType>) => {
+                                    res: Response<CourseAPIModel>) => {
 
     if (!req.body.title){
         res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
         return;
     }
 
-    const cratedCourse = {
+    const cratedCourse: CourseType = {
         id: +(new Date()),
         title: req.body.title,
+        studentsCount: 0
     };
-
     db.courses.push(cratedCourse);
-    console.log(cratedCourse);
     //положили в бд
+
     res
         .status(HTTP_STATUSES.CREATED_201)
         .json(cratedCourse);
 });
 
-app.delete('/courses/:id', (req: RequestWithParams<{id: string}>,
+app.delete('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModel>,
                                           res) => {
     const courseId = +req.params.id;
     const courseIndex = db.courses.findIndex(course => course.id === courseId);
@@ -93,7 +106,7 @@ app.delete('/courses/:id', (req: RequestWithParams<{id: string}>,
     }
 });
 
-app.put('/courses/:id', (req: RequestWithParamsAndBody<{id: string}, CreateCourseModel>,
+app.put('/courses/:id', (req: RequestWithParamsAndBody<URIParamsCourseIdModel, UpdateCourseModel>,
                                         res) => {
 
     if(!req.body.title){

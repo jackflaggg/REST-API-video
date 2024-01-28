@@ -23,9 +23,11 @@ describe('/course', () => {
     })
 
     it(`-POST should'nt create course with incorrect input data`, async () => {
+        const newVar: CreateCourseModel = { title: 'new course' };
+
         await request(app)
             .post('/courses')
-            .send({title: ''})
+            .send(newVar)
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
         await request(app)

@@ -1,4 +1,5 @@
 // @ts-ignore
+//s
 import request from 'supertest'
 import {CreateCourseModel} from "../../src/models/CreateCourseModel";
 import {UpdateCourseModel} from "../../src/models/UpdateCourseModel";

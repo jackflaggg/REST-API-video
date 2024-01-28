@@ -47,7 +47,7 @@ export const getCoursesRouter = (db: DBType) => {
         res.json(getCourseViewModel(foundCourse));
     })
 
-    router.post('/courses', (req: RequestWithBody<CreateCourseModel>,
+    router.post('/', (req: RequestWithBody<CreateCourseModel>,
                           res: Response<CourseAPIModel>) => {
 
         if (!req.body.title){

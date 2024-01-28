@@ -88,7 +88,10 @@ app.post('/courses', (req: RequestWithBody<CreateCourseModel>,
 
     res
         .status(HTTP_STATUSES.CREATED_201)
-        .json(cratedCourse);
+        .json({
+            id: cratedCourse.id,
+            title: cratedCourse.title
+        });
 });
 
 app.delete('/courses/:id', (req: RequestWithParams<URIParamsCourseIdModel>,

@@ -48,7 +48,7 @@ describe('/course', () => {
 
      expect(createdCourse1).toEqual({
          id: expect.any(Number),
-         title: 'new course'
+         title: newVar.title
      })
 
      await request(app)

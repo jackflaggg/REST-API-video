@@ -1,6 +1,7 @@
 import request from 'supertest'
 import {app, db, HTTP_STATUSES} from "../../src";
 import {CreateCourseModel} from "../../src/models/CreateCourseModel";
+import {UpdateCourseModel} from "../../src/models/UpdateCourseModel";
 
 describe('/course', () => {
 
@@ -77,7 +78,7 @@ describe('/course', () => {
     })
 
     it(`-PUT should'nt update course with incorrect input data`, async () => {
-        const newVar: CreateCourseModel = { title: '' };
+        const newVar: UpdateCourseModel = { title: '' };
 
         await request(app)
             .put( '/courses/' + createdCourse1.id)
@@ -90,7 +91,7 @@ describe('/course', () => {
     })
 
     it(`+PUT should update course that not exist with`, async () => {
-        const newVar: CreateCourseModel = { title: 'good title' };
+        const newVar: UpdateCourseModel = { title: 'good title' };
 
         await request(app)
             .put( '/courses/' + -100)
@@ -99,7 +100,7 @@ describe('/course', () => {
     })
 
     it(`+PUT should update course with correct input data`, async () => {
-        const newVar: CreateCourseModel = { title: 'good title' };
+        let newVar: UpdateCourseModel = { title: 'good title' };
 
         await request(app)
             .put( '/courses/' + createdCourse1.id)

@@ -13,5 +13,5 @@ app.use(jsonBodyMiddleware);
 const coursesRouter = getCoursesRouter(db);
 const testsRouter = getTestsRouter(db);
 app.use("/courses", coursesRouter)
-app.use("/__test__", coursesRouter)
+app.use("/__test__", testsRouter)
 

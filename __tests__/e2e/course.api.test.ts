@@ -1,7 +1,9 @@
 import request from 'supertest'
 import {CreateCourseModel} from "../../src/models/CreateCourseModel";
 import {UpdateCourseModel} from "../../src/models/UpdateCourseModel";
-import {app, HTTP_STATUSES} from "../../src/app";
+import {app} from "../../src/app";
+import {HTTP_STATUSES} from "../../src/utils";
+
 
 const getRequest = () => {
     return request(app)

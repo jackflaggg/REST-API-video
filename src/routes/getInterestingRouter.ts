@@ -7,18 +7,17 @@ import {URIParamsCourseIdModel} from "../models/URIParamsCourseIdModel";
 export const getInterestingRouter = (db: DBType) => {
     const router = express.Router();
 
+    router.get('/:id([0-9]+)', (req: RequestWithParams<URIParamsCourseIdModel>,
+                             res) => {
+
+        res.json({title: 'data by id: ' + req.params.id});
+    })
+
     router.get('/books', (req: RequestWithQuery<QueryCoursesModel>,
                           res) => {
 
         res.json({title: ' its books'})
     });
-
-    router.get('/:id', (req: RequestWithParams<URIParamsCourseIdModel>,
-                        res) => {
-
-        res.json({title: 'data by id: ' + req.params.id});
-    })
-
 
 
     return router;

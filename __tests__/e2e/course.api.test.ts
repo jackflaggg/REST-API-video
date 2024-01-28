@@ -1,7 +1,7 @@
 import request from 'supertest'
 import {CreateCourseModel} from "../../src/models/CreateCourseModel";
 import {UpdateCourseModel} from "../../src/models/UpdateCourseModel";
-import {app, db, HTTP_STATUSES} from "../../src/app";
+import {app, HTTP_STATUSES} from "../../src/app";
 
 const getRequest = () => {
     return request(app)
@@ -143,5 +143,9 @@ describe('/course', () => {
         await getRequest()
             .get('/courses/')
             .expect(HTTP_STATUSES.OK_200, [])
+    })
+
+    afterAll(done => {
+        done()
     })
 })

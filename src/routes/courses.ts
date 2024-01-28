@@ -16,8 +16,6 @@ export function getCourseViewModel(dbCourse: CourseType): CourseAPIModel {
     }
 }
 
-export const routerCourses = express.Router();
-
 export const getCoursesRouter = (db: DBType) => {
     const router = express.Router();
 

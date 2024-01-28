@@ -132,6 +132,6 @@ app.delete('/__test__/data', (req,
     res.sendStatus(HTTP_STATUSES.NO_CONTENT_204);
 });
 
-app.listen(port, () => {
+export const server = app.listen(port, () => {
     console.log('Port active: ' + port);
 });

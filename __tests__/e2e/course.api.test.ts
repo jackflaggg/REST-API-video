@@ -3,22 +3,25 @@ import {app, db, HTTP_STATUSES} from "../../src";
 import {CreateCourseModel} from "../../src/models/CreateCourseModel";
 import {UpdateCourseModel} from "../../src/models/UpdateCourseModel";
 
+const getRequest = () => {
+    return request(app)
+}
 describe('/course', () => {
 
     beforeAll(async () => {
-        await request(app)
+        await getRequest()
             .delete('/__test__/data')
     })
     //процедура подготовки данных перед тестами(зачистка)
 
     it('+GET should return code 200 and empty array', async () => {
-       await request(app)
+       await getRequest()
             .get('/courses')
             .expect(HTTP_STATUSES.OK_200, [])
     })
 
     it('+GET should return code 404 for not existing course', async () => {
-        await request(app)
+        await getRequest()
             .get('/courses/1')
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     })
@@ -26,12 +29,12 @@ describe('/course', () => {
     it(`-POST should'nt create course with incorrect input data`, async () => {
         const newVar: CreateCourseModel = { title: '' };
 
-        await request(app)
+        await getRequest()
             .post('/courses')
             .send(newVar)
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
-        await request(app)
+        await getRequest()
             .get('/courses')
             .expect(HTTP_STATUSES.OK_200, [])
     })
@@ -39,7 +42,7 @@ describe('/course', () => {
     let createdCourse1: any = null;
    it(`+POST should create course with correct input data`, async () => {
        const newVar: CreateCourseModel = { title: 'new course' };
-       const createResponse = await request(app)
+       const createResponse = await getRequest()
          .post('/courses')
          .send(newVar)
          .expect(HTTP_STATUSES.CREATED_201)
@@ -51,7 +54,7 @@ describe('/course', () => {
          title: newVar.title
      })
 
-     await request(app)
+     await getRequest()
          .get('/courses')
          .expect(HTTP_STATUSES.OK_200, [createdCourse1])
    })
@@ -60,7 +63,7 @@ describe('/course', () => {
     it(`+POST create course with correct input data`, async () => {
         const newVar: CreateCourseModel = { title: 'new course 2' };
 
-        const createResponse = await request(app)
+        const createResponse = await getRequest()
             .post('/courses')
             .send(newVar)
             .expect(HTTP_STATUSES.CREATED_201)
@@ -72,7 +75,7 @@ describe('/course', () => {
             title: newVar.title
         })
 
-        await request(app)
+        await getRequest()
             .get('/courses')
             .expect(HTTP_STATUSES.OK_200, [createdCourse1, createdCourse2])
     })
@@ -80,12 +83,12 @@ describe('/course', () => {
     it(`-PUT should'nt update course with incorrect input data`, async () => {
         const newVar: UpdateCourseModel = { title: '' };
 
-        await request(app)
+        await getRequest()
             .put( '/courses/' + createdCourse1.id)
             .send(newVar)
             .expect(HTTP_STATUSES.BAD_REQUEST_400)
 
-        await request(app)
+        await getRequest()
             .get( '/courses/' + createdCourse1.id)
             .expect(HTTP_STATUSES.OK_200, createdCourse1)
     })
@@ -93,7 +96,7 @@ describe('/course', () => {
     it(`+PUT should update course that not exist with`, async () => {
         const newVar: UpdateCourseModel = { title: 'good title' };
 
-        await request(app)
+        await getRequest()
             .put( '/courses/' + -100)
             .send(newVar)
             .expect(HTTP_STATUSES.NOT_FOUND_404)
@@ -102,42 +105,42 @@ describe('/course', () => {
     it(`+PUT should update course with correct input data`, async () => {
         let newVar: UpdateCourseModel = { title: 'good title' };
 
-        await request(app)
+        await getRequest()
             .put( '/courses/' + createdCourse1.id)
             .send(newVar)
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
-        await request(app)
+        await getRequest()
             .get( '/courses/' + createdCourse1.id)
             .expect(HTTP_STATUSES.OK_200, {
                 ...createdCourse1,
                 title: newVar.title
             })
 
-        await request(app)
+        await getRequest()
             .get( '/courses/' + createdCourse2.id)
             .expect(HTTP_STATUSES.OK_200, createdCourse2
             )
     })
 
     it('+DELETE both courses', async() => {
-        await request(app)
+        await getRequest()
             .delete('/courses/' + createdCourse1.id)
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
-        await request(app)
+        await getRequest()
             .get('/courses/' + createdCourse1.id)
             .expect(HTTP_STATUSES.NOT_FOUND_404)
 
-        await request(app)
+        await getRequest()
             .delete('/courses/' + createdCourse2.id)
             .expect(HTTP_STATUSES.NO_CONTENT_204)
 
-        await request(app)
+        await getRequest()
             .get('/courses/' + createdCourse2.id)
             .expect(HTTP_STATUSES.NOT_FOUND_404)
 
-        await request(app)
+        await getRequest()
             .get('/courses/')
             .expect(HTTP_STATUSES.OK_200, [])
     })

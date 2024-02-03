@@ -1,12 +1,12 @@
-import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "../types";
-import {QueryCoursesModel} from "../models/QueryCoursesModel";
+import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "../../types";
+import {QueryCoursesModel} from "./models/QueryCoursesModel";
 import express, {Express, Response} from "express";
-import {CourseAPIModel} from "../models/CourseAPIModel";
-import {URIParamsCourseIdModel} from "../models/URIParamsCourseIdModel";
-import {UpdateCourseModel} from "../models/UpdateCourseModel";
-import {CourseType, DBType} from "../db/db";
-import {HTTP_STATUSES} from "../utils";
-import {CreateCourseModel} from "../models/CreateCourseModel";
+import {CourseAPIModel} from "./models/CourseAPIModel";
+import {URIParamsCourseIdModel} from "./models/URIParamsCourseIdModel";
+import {UpdateCourseModel} from "./models/UpdateCourseModel";
+import {CourseType, DBType} from "../../db/db";
+import {HTTP_STATUSES} from "../../utils";
+import {CreateCourseModel} from "./models/CreateCourseModel";
 
 
 export function getCourseViewModel(dbCourse: CourseType): CourseAPIModel {
@@ -16,11 +16,11 @@ export function getCourseViewModel(dbCourse: CourseType): CourseAPIModel {
     }
 }
 
-export const getUsersRouter = (db: DBType) => {
+export const getCoursesRouter = (db: DBType) => {
     const router = express.Router();
 
     router.get('/', (req: RequestWithQuery<QueryCoursesModel>,
-                     res: Response<CourseAPIModel[]>) => {
+                                   res: Response<CourseAPIModel[]>) => {
         let foundCourses = db.courses;
 
 
@@ -33,7 +33,7 @@ export const getUsersRouter = (db: DBType) => {
     });
 
     router.get('/:id', (req: RequestWithParams<URIParamsCourseIdModel>,
-                        res: Response<CourseAPIModel>) => {
+                                       res: Response<CourseAPIModel>) => {
         const foundCourse = db.courses
             .find(cours => cours.id === +req.params.id);
 
@@ -46,7 +46,7 @@ export const getUsersRouter = (db: DBType) => {
     })
 
     router.post('/', (req: RequestWithBody<CreateCourseModel>,
-                      res: Response<CourseAPIModel>) => {
+                          res: Response<CourseAPIModel>) => {
 
         if (!req.body.title){
             res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);
@@ -67,7 +67,7 @@ export const getUsersRouter = (db: DBType) => {
     });
 
     router.delete('/:id', (req: RequestWithParams<URIParamsCourseIdModel>,
-                           res) => {
+                                          res) => {
         const courseId = +req.params.id;
         const courseIndex = db.courses.findIndex(course => course.id === courseId);
 
@@ -82,7 +82,7 @@ export const getUsersRouter = (db: DBType) => {
     });
 
     router.put('/:id', (req: RequestWithParamsAndBody<URIParamsCourseIdModel, UpdateCourseModel>,
-                        res) => {
+                                       res) => {
 
         if(!req.body.title){
             res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400);

@@ -1,16 +1,15 @@
 // @ts-ignore
-//s
 import request from 'supertest'
-import {CreateCourseModel} from "../../src/models/CreateCourseModel";
-import {UpdateCourseModel} from "../../src/models/UpdateCourseModel";
+import {CreateCourseModel} from "../../src/features/courses/models/CreateCourseModel";
 import {app} from "../../src/app";
 import {HTTP_STATUSES} from "../../src/utils";
+import {UpdateCourseModel} from "../../src/features/courses/models/UpdateCourseModel";
 
 
 const getRequest = () => {
     return request(app)
 }
-describe('/course', () => {
+describe('tests for /course', () => {
 
     beforeAll(async () => {
         await getRequest()

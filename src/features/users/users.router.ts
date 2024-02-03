@@ -1,6 +1,6 @@
 import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "../../types";
-import express, { Response} from "express";
-import { DBType, UserType} from "../../db/db";
+import express, {Response} from "express";
+import {DBType, UserType} from "../../db/db";
 import {HTTP_STATUSES} from "../../utils";
 import {UpdateUserModel} from "./models/UpdateUserModel";
 import {UserAPIModel} from "./models/UserAPIModel";

@@ -4,6 +4,7 @@ import {CreateCourseModel} from "../../src/features/courses/models/CreateCourseM
 import {app} from "../../src/app";
 import {HTTP_STATUSES} from "../../src/utils";
 import {UpdateCourseModel} from "../../src/features/courses/models/UpdateCourseModel";
+import {coursesTestManager} from "./utils/coursesTestManager";
 
 
 const getRequest = () => {
@@ -29,13 +30,11 @@ describe('tests for /course', () => {
             .expect(HTTP_STATUSES.NOT_FOUND_404)
     })
 
-    it(`-POST should'nt create course with incorrect input data`, async () => {
+    it(`-POST shouldn't create course with incorrect input data`, async () => {
         const newVar: CreateCourseModel = { title: '' };
 
-        await getRequest()
-            .post('/courses')
-            .send(newVar)
-            .expect(HTTP_STATUSES.BAD_REQUEST_400)
+
+        await coursesTestManager.createCourse(newVar, HTTP_STATUSES.BAD_REQUEST_400)
 
         await getRequest()
             .get('/courses')
@@ -45,17 +44,10 @@ describe('tests for /course', () => {
     let createdCourse1: any = null;
    it(`+POST should create course with correct input data`, async () => {
        const newVar: CreateCourseModel = { title: 'new course' };
-       const createResponse = await getRequest()
-         .post('/courses')
-         .send(newVar)
-         .expect(HTTP_STATUSES.CREATED_201)
 
-       createdCourse1 = createResponse.body;
+       const result = await coursesTestManager.createCourse(newVar);
 
-     expect(createdCourse1).toEqual({
-         id: expect.any(Number),
-         title: newVar.title
-     })
+       createdCourse1 = result.CreateCourse;
 
      await getRequest()
          .get('/courses')
@@ -66,24 +58,19 @@ describe('tests for /course', () => {
     it(`+POST create course with correct input data`, async () => {
         const newVar: CreateCourseModel = { title: 'new course 2' };
 
-        const createResponse = await getRequest()
-            .post('/courses')
-            .send(newVar)
-            .expect(HTTP_STATUSES.CREATED_201)
+        const result = await coursesTestManager.createCourse(newVar);
 
-        createdCourse2 = createResponse.body;
 
-        expect(createdCourse2).toEqual({
-            id: expect.any(Number),
-            title: newVar.title
-        })
+
+        createdCourse2 = result.CreateCourse;
+
 
         await getRequest()
             .get('/courses')
             .expect(HTTP_STATUSES.OK_200, [createdCourse1, createdCourse2])
     })
 
-    it(`-PUT should'nt update course with incorrect input data`, async () => {
+    it(`-PUT shouldn't update course with incorrect input data`, async () => {
         const newVar: UpdateCourseModel = { title: '' };
 
         await getRequest()

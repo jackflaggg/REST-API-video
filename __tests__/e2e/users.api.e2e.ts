@@ -4,11 +4,14 @@ import {app, RouterPaths} from "../../src/app";
 import {HTTP_STATUSES} from "../../src/utils";
 import {CreateUserModel} from "../../src/features/users/models/CreateUserModel";
 import {UpdateUserModel} from "../../src/features/users/models/UpdateUserModel";
+import {usersTestManager} from "./utils/usersTestManager";
 
 
-const getRequest = () => {
+export const getRequest = () => {
     return request(app)
 }
+
+usersTestManager
 describe('tests for /users', () => {
 
     beforeAll(async () => {
@@ -32,10 +35,7 @@ describe('tests for /users', () => {
     it(`-POST shouldn't create entity with incorrect input data`, async () => {
         const newVar: CreateUserModel = { userName: '' };
 
-        await getRequest()
-            .post(RouterPaths.users)
-            .send(newVar)
-            .expect(HTTP_STATUSES.BAD_REQUEST_400)
+        await usersTestManager.createUser(newVar, HTTP_STATUSES.BAD_REQUEST_400)
 
         await getRequest()
             .get(RouterPaths.users)
@@ -45,17 +45,11 @@ describe('tests for /users', () => {
     let createdEntity1: any = null;
     it(`+POST should create entity with correct input data`, async () => {
         const newVar: CreateUserModel = { userName: 'dimych' };
-        const createResponse = await getRequest()
-            .post(RouterPaths.users)
-            .send(newVar)
-            .expect(HTTP_STATUSES.CREATED_201)
 
-        createdEntity1 = createResponse.body;
+        const {response, Createdentity} = await usersTestManager.createUser(newVar)
 
-        expect(createdEntity1).toEqual({
-            id: expect.any(Number),
-            userName: newVar.userName
-        })
+
+        createdEntity1 = Createdentity;
 
         await getRequest()
             .get(RouterPaths.users)
@@ -66,17 +60,9 @@ describe('tests for /users', () => {
     it(`+POST create entity with correct input data`, async () => {
         const newVar: CreateUserModel = { userName: 'rasul' };
 
-        const createResponse = await getRequest()
-            .post(RouterPaths.users)
-            .send(newVar)
-            .expect(HTTP_STATUSES.CREATED_201)
+        const {response, Createdentity} = await usersTestManager.createUser(newVar)
 
-        createdEntity2 = createResponse.body;
-
-        expect(createdEntity2).toEqual({
-            id: expect.any(Number),
-            userName: newVar.userName
-        })
+        createdEntity2 = Createdentity;
 
         await getRequest()
             .get(RouterPaths.users)

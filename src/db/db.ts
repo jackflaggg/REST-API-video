@@ -9,8 +9,8 @@ export type UserType = {
     userName: string
 }
 
-export type StudentCourseBindings = {
-    studentId: number,
+export type UserCourseBindingsType = {
+    userId: number,
     courseId: number,
     date: Date
 }
@@ -25,10 +25,10 @@ export const db: DBType = {
         {id: 1, userName: 'dimych'},
         {id: 2, userName: 'rasul'}
     ],
-    studentCourseBindings: [
-        {studentId: 1, courseId: 1, date: new Date(2022, 10, 1)},
-        {studentId: 1, courseId: 2, date: new Date(2022, 10, 1)},
-        {studentId: 2, courseId: 2, date: new Date(2022, 10, 1)}
+    userCourseBindings: [
+        {userId: 1, courseId: 1, date: new Date(2022, 10, 1)},
+        {userId: 1, courseId: 2, date: new Date(2022, 10, 1)},
+        {userId: 2, courseId: 2, date: new Date(2022, 10, 1)}
     ]
 };
 
@@ -37,4 +37,4 @@ export const db: DBType = {
 export type DBType = {
     courses: CourseType[],
     users: UserType[],
-    studentCourseBindings: StudentCourseBindings[]}
+    userCourseBindings: UserCourseBindingsType[]}
